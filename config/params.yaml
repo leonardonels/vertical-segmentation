@@ -1,0 +1,7 @@
+pointcloud_filter_node:
+  ros__parameters:
+    input_topic: "/points/filtered"
+    output_topic: "/patchworkpp/nonground"
+    intensity: false
+    vertical_zones:
+      - "start: 0.009, end: 1.0, downsample: 1"
