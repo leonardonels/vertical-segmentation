@@ -14,9 +14,9 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='vertical-segmentation',
-            executable='pointcloud_filter_node',
+            executable='segmentation_filter_node',
             parameters=[config],
-            name='pointcloud_filter_node',
+            name='segmentation_filter_node',
             output='screen',
         ),
     ])

@@ -18,6 +18,9 @@ void PointCloudFilter::load_parameters()
     this->declare_parameter<std::string>("output_topic", "");
     m_output_topic = this->get_parameter("output_topic").get_value<std::string>();
 
+    this->declare_parameter<bool>("intensity", false);
+    m_intensity = this->get_parameter("intensity").get_value<bool>();
+
     this->declare_parameter<std::vector<std::string>>("vertical_zones", std::vector<std::string>{});
     auto vertical_zones = this->get_parameter("vertical_zones").as_string_array();
 
@@ -61,7 +64,7 @@ void PointCloudFilter::initialize()
     m_output_pub = this->create_publisher<sensor_msgs::msg::PointCloud2>(m_output_topic, 10);
 }
 
-PointCloudFilter::PointCloudFilter() : Node("pointcloud_filter_node") 
+PointCloudFilter::PointCloudFilter() : Node("segmentation_filter_node") 
 {
     this->initialize();
 }
@@ -78,21 +81,25 @@ void PointCloudFilter::pointcloud_callback(const sensor_msgs::msg::PointCloud2::
     if (!m_vertical_zones.empty()) {
         typename pcl::PointCloud<T>::Ptr filtered_cloud(new pcl::PointCloud<T>);
         for (const auto& zone : m_vertical_zones) {
-            typename pcl::PointCloud<T>::Ptr zone_cloud(new pcl::PointCloud<T>);
             int counter = 0;
             for (const auto& point : cloud->points) {
-                float r = std::sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
-                if (r == 0) continue; // avoid division by zero
-                float z = std::asin(point.z / r);  // or use atan2 for robustness
-                if (z >= zone.start && z < zone.end) {
+                if (point.z >= zone.start && point.z < zone.end) {
                     if (counter++ % zone.downsample == 0) {
-                        zone_cloud->points.push_back(point);
+                        filtered_cloud->points.push_back(point);
                     }
                 }
             }
-            *filtered_cloud += *zone_cloud;
         }
+        
+        cloud->points = filtered_cloud->points;
+        cloud->width = filtered_cloud->points.size();
+
+        /*
+        filtered_cloud->width = filtered_cloud->points.size();
+        filtered_cloud->height = 1;
+        filtered_cloud->is_dense = false;
         cloud = filtered_cloud;
+        */
     }
 
     // Convert back to ROS message

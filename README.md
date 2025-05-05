@@ -16,7 +16,7 @@ source install/setup.bash
 
 ## :abacus: Parameters
 ```yaml
-pointcloud_filter_node:
+segmentation_filter_node:
   ros__parameters:
 
     input_topic: "/lidar/filtered"

@@ -1,5 +1,5 @@
-#ifndef POINTCLOUD_FILTER_HPP
-#define POINTCLOUD_FILTER_HPP
+#ifndef SEGMENTATION_FILTER_HPP
+#define SEGMENTATION_FILTER_HPP
 
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
@@ -42,4 +42,4 @@ private:
     std::vector<VerticalZone> m_vertical_zones;
 };
 
-#endif // POINTCLOUD_FILTER_HPP
+#endif // SEGMENTATION_FILTER_HPP
