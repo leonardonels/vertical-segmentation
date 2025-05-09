@@ -4,4 +4,5 @@ segmentation_filter_node:
     output_topic: "/patchworkpp/nonground"
     intensity: true
     vertical_zones:
-      - "start: 0.1, end: 1.0, downsample: 1"
+      - "start: 0.05, end: 1.0, downsample: 1"  # 5cm off the ground
+      # 2cm could work but will produce noise in the distance
